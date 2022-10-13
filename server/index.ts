@@ -1,14 +1,30 @@
-import express, { Express, Request, Response } from 'express'
+import express, { Express } from 'express'
 import dotenv from 'dotenv'
+import connectToDatabase from './utils/connectToDatabase'
+import taskRoutes from './routes/task.routes'
+import { errorHandler } from './controller/error.controller'
+import morgan from 'morgan'
 
-dotenv.config()
+dotenv.config({ path: './.env.local' })
+
+connectToDatabase(process.env.MONGO_URI as string)
 
 const app: Express = express()
 const port = process.env.PORT || 3001
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server')
+if (process.env.NODE_ENV === 'development') app.use(morgan('dev'))
+
+// * routes
+app.use('/api/tasks', taskRoutes)
+
+// * handle 404
+app.use('*', (req, res, next) => {
+  res.status(404).json({ message: 'Route is not found' })
+  next()
 })
+
+// * handle errors
+app.use(errorHandler)
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at https://localhost:${port}`)
