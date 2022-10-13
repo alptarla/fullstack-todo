@@ -18,8 +18,8 @@ export const createTask = async (
     })
 
     res.status(200).json({ message: defaultMessages.success })
-  } catch (error) {
-    next(createError(500, defaultMessages.serverError))
+  } catch (error: any) {
+    next(createError(500, error?.message || defaultMessages.serverError))
   }
 }
 
@@ -31,8 +31,8 @@ export const getAllTasks = async (
   try {
     const tasks: ITask[] = await Task.find()
     res.status(200).json({ tasks })
-  } catch (error) {
-    next(createError(500, defaultMessages.serverError))
+  } catch (error: any) {
+    next(createError(500, error?.message || defaultMessages.serverError))
   }
 }
 
@@ -49,7 +49,7 @@ export const getTaskById = async (
     if (!task) return next(createError(404, `Task ${defaultMessages.notFound}`))
 
     res.status(200).json({ task })
-  } catch (error) {
-    next(createError(500, defaultMessages.serverError))
+  } catch (error: any) {
+    next(createError(500, error?.message || defaultMessages.serverError))
   }
 }
