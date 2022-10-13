@@ -6,7 +6,7 @@ export type TaskLabelType = 'High' | 'Medium' | 'Low'
 export type TaskStatusType = 'Next Up' | 'In Progress' | 'Completed'
 
 export interface ITask {
-  id: string
+  _id: string
   title: string
   description?: string
   createdAt: Date

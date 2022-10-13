@@ -4,6 +4,25 @@ import createError from 'http-errors'
 import mongoose from 'mongoose'
 import { defaultMessages } from '../utils/errorMessages'
 
+export const createTask = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const body: ITask = req.body
+
+    await Task.create({
+      ...body,
+      createdAt: Date.now(),
+    })
+
+    res.status(200).json({ message: defaultMessages.success })
+  } catch (error) {
+    next(createError(500, defaultMessages.serverError))
+  }
+}
+
 export const getAllTasks = async (
   req: Request,
   res: Response,
